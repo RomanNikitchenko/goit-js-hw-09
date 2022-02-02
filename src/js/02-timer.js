@@ -3,8 +3,8 @@ import flatpickr from 'flatpickr';
 // Дополнительный импорт стилей
 import 'flatpickr/dist/flatpickr.min.css';
 
-const inputdatetimePicker = document.querySelector("#datetime-picker");
-const btnDataStart = document.querySelector('[data-start]');
+const datetimePicker = document.querySelector("#datetime-picker");
+const dataStart = document.querySelector('[data-start]');
 
 const sdays = document.querySelector('[data-days]');
 const shours = document.querySelector('[data-hours]');
@@ -21,5 +21,4 @@ const options = {
   },
 };
 
-flatpickr(inputdatetimePicker, options);
-
+flatpickr(datetimePicker, options);
