@@ -23,6 +23,9 @@ const options = {
 
 flatpickr(dateTimePicker, options);
 
+let timerId = null;
+let disabled = false;
+
 dataStart.setAttribute("disabled", "disabled");
 
 dateTimePicker.addEventListener('input', () => {
@@ -30,6 +33,7 @@ dateTimePicker.addEventListener('input', () => {
   const subtractTime = appointedTime - new Date();
 
   if (subtractTime < 0) {
+    dataStart.setAttribute("disabled", "disabled");
     window.alert("Please choose a date in the future")
     return
   }
@@ -38,10 +42,8 @@ dateTimePicker.addEventListener('input', () => {
 });
 
 
-let timerId = null;
-let disabled = false;
-
 dataStart.addEventListener('click', () => {
+  dataStart.setAttribute("disabled", "disabled");
 
   if (disabled) {
     return;
@@ -59,11 +61,20 @@ dataStart.addEventListener('click', () => {
       return
     }
 
-    console.log(convertMs(subtractTime));
-  }, 1000);
+    const { days, hours, minutes, seconds } = convertMs(subtractTime);
 
+    timeDisplays(days, hours, minutes, seconds);
+
+  }, 1000);
 });
 
+function timeDisplays(days, hours, minutes, seconds) {
+  sseconds.textContent = `${seconds}`;
+}
+
+function pad(value) {
+  return String(value).padStart(2, '0');
+};
 
 function convertMs(ms) {
   const second = 1000;
@@ -71,11 +82,12 @@ function convertMs(ms) {
   const hour = minute * 60;
   const day = hour * 24;
 
-  const days = Math.floor(ms / day);
-  const hours = Math.floor((ms % day) / hour);
-  const minutes = Math.floor(((ms % day) % hour) / minute);
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+  const days = pad(Math.floor(ms / day));
+  const hours = pad(Math.floor((ms % day) / hour));
+  const minutes = pad(Math.floor(((ms % day) % hour) / minute));
+  const seconds = pad(Math.floor((((ms % day) % hour) % minute) / second));
 
   return { days, hours, minutes, seconds };
 };
+
 
