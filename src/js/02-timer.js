@@ -2,7 +2,7 @@
 import flatpickr from 'flatpickr';
 // Дополнительный импорт стилей
 import 'flatpickr/dist/flatpickr.min.css';
-import '../sass/timer.scss'
+import '../sass/timer.scss';
 
 const dateTimePicker = document.querySelector("#datetime-picker");
 const dataStart = document.querySelector('[data-start]');
@@ -12,11 +12,6 @@ const shours = document.querySelector('[data-hours]');
 const sminutes = document.querySelector('[data-minutes]');
 const sseconds = document.querySelector('[data-seconds]');
 const timer = document.querySelector('.timer');
-
-timer.style.color = getRandomHexColor();
-function getRandomHexColor() {
-  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-};
 
 const options = {
   enableTime: true,
@@ -79,7 +74,6 @@ function timeDisplays({ days, hours, minutes, seconds }) {
   shours.textContent = `${hours}`;
   sminutes.textContent = `${minutes}`;
   sseconds.textContent = `${seconds}`;
-
 }
 
 function addLeadingZero(value) {
