@@ -1,4 +1,6 @@
 
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+
 const form = document.querySelector('.form');
 
 form.addEventListener("submit", handleSubmit);
@@ -27,9 +29,11 @@ function handleSubmit(event) {
     createPromise(number, numDelay)
       .then(({ position, delay }) => {
         console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
+        messageNotifySuccess(position, delay)
       })
       .catch(({ position, delay }) => {
         console.log(`❌ Rejected promise ${position} in ${delay}ms`);
+        messageNotifyFailure(position, delay);
       });
     
     timerId = setInterval(() => {
@@ -46,9 +50,11 @@ function handleSubmit(event) {
       createPromise(number, numDelay)
       .then(({ position, delay }) => {
         console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
+        messageNotifySuccess(position, delay);
       })
       .catch(({ position, delay }) => {
         console.log(`❌ Rejected promise ${position} in ${delay}ms`);
+        messageNotifyFailure(position, delay);
       });
     }, numStep);
   }, numDelay);
@@ -70,5 +76,26 @@ const createPromise = (position, delay) => {
         delay: delay,
       });
     }  
+  });
+};
+     
+function messageNotifySuccess(position, delay) {
+  Notify.success(`Fulfilled promise ${position} in ${delay}ms`, {
+    borderRadius: '20px',
+    timeout: 5000,
+    success: {
+      background: '#64c22d',
+    }
+  });
+};
+
+function messageNotifyFailure(position, delay) {
+  Notify.failure(`Rejected promise ${position} in ${delay}ms, click me`, {
+    borderRadius: '5px',
+    clickToClose: true,
+    timeout: 60000,
+    failure: {
+      background: '#c22d5f',
+    }
   });
 };
