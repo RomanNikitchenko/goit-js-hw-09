@@ -1,8 +1,7 @@
-// Описан в документации
 import flatpickr from 'flatpickr';
-// Дополнительный импорт стилей
 import 'flatpickr/dist/flatpickr.min.css';
 import '../sass/timer.scss';
+import moment from 'moment';
 
 const dateTimePicker = document.querySelector("#datetime-picker");
 const dataStart = document.querySelector('[data-start]');
@@ -11,12 +10,11 @@ const sdays = document.querySelector('[data-days]');
 const shours = document.querySelector('[data-hours]');
 const sminutes = document.querySelector('[data-minutes]');
 const sseconds = document.querySelector('[data-seconds]');
-const timer = document.querySelector('.timer');
 
 const options = {
   enableTime: true,
   time_24hr: true,
-  defaultDate: new Date(),
+  defaultDate: "",
   minuteIncrement: 1,
   onClose(selectedDates) {
     console.log(selectedDates[0]);
@@ -31,8 +29,8 @@ let disabled = false;
 dataStart.setAttribute("disabled", "disabled");
 
 dateTimePicker.addEventListener('input', () => {
-  const appointedTime = new Date(dateTimePicker.value);
-  const subtractTime = appointedTime - new Date();
+  const appointedTime = moment(dateTimePicker.value, 'YYYY-MM-DD HH:mm:ss');
+  const subtractTime = moment(appointedTime).diff(moment(), 'milliseconds');
 
   if (subtractTime < 0) {
     dataStart.setAttribute("disabled", "disabled");
@@ -52,10 +50,10 @@ dataStart.addEventListener('click', () => {
   };
   disabled = true;
 
-  const appointedTime = new Date(dateTimePicker.value);
+  const appointedTime = moment(dateTimePicker.value, 'YYYY-MM-DD HH:mm:ss');
 
   timerId = setInterval(() => {
-    const subtractTime = appointedTime - new Date();
+    const subtractTime = moment(appointedTime).diff(moment(), 'milliseconds');
 
     if (subtractTime <= 0) {
       clearInterval(timerId);
@@ -93,5 +91,3 @@ function convertMs(ms) {
 
   return { days, hours, minutes, seconds };
 };
-
-
