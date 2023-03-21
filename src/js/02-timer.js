@@ -3,7 +3,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 import '../sass/timer.scss';
 import moment from 'moment';
 
-const dateTimePicker = document.querySelector("#datetime-picker");
+const dateTimePicker = document.querySelector('#datetime-picker');
 const dataStart = document.querySelector('[data-start]');
 
 const sdays = document.querySelector('[data-days]');
@@ -11,44 +11,49 @@ const shours = document.querySelector('[data-hours]');
 const sminutes = document.querySelector('[data-minutes]');
 const sseconds = document.querySelector('[data-seconds]');
 
+let appointedTime;
+let subtractTime;
+
 const options = {
   enableTime: true,
   time_24hr: true,
-  defaultDate: "",
+  defaultDate: '',
   minuteIncrement: 1,
-  onClose(selectedDates) {
-    console.log(selectedDates[0]);
+  onClose() {
+    if (subtractTime < 0) {
+      window.alert('Please choose a date in the future');
+      clearInterval(timerId);
+      sdays.textContent = '00';
+      shours.textContent = '00';
+      sminutes.textContent = '00';
+      sseconds.textContent = '00';
+    }
   },
 };
 
 flatpickr(dateTimePicker, options);
 
 let timerId = null;
-let disabled = false;
 
-dataStart.setAttribute("disabled", "disabled");
+dataStart.setAttribute('disabled', 'disabled');
 
-dateTimePicker.addEventListener('input', () => {
-  const appointedTime = moment(dateTimePicker.value, 'YYYY-MM-DD HH:mm:ss');
-  const subtractTime = moment(appointedTime).diff(moment(), 'milliseconds');
+dateTimePicker.addEventListener('input', e => {
+  const { value } = e.currentTarget;
+  appointedTime = moment(value, 'YYYY-MM-DD HH:mm:ss');
+  subtractTime = moment(appointedTime).diff(moment(), 'milliseconds');
 
   if (subtractTime < 0) {
-    dataStart.setAttribute("disabled", "disabled");
-    window.alert("Please choose a date in the future")
-    return
+    dataStart.setAttribute('disabled', 'disabled');
+    return;
   }
 
-  dataStart.removeAttribute("disabled");
+  dataStart.removeAttribute('disabled');
 });
 
-
 dataStart.addEventListener('click', () => {
-  dataStart.setAttribute("disabled", "disabled");
+  dataStart.setAttribute('disabled', 'disabled');
 
-  if (disabled) {
-    return;
-  };
-  disabled = true;
+  clearInterval(timerId);
 
   const appointedTime = moment(dateTimePicker.value, 'YYYY-MM-DD HH:mm:ss');
 
@@ -57,11 +62,10 @@ dataStart.addEventListener('click', () => {
 
     if (subtractTime <= 0) {
       clearInterval(timerId);
-      disabled = false;
-      return
+      return;
     }
 
-    const time = convertMs(subtractTime)
+    const time = convertMs(subtractTime);
 
     timeDisplays(time);
   }, 1000);
@@ -76,7 +80,7 @@ function timeDisplays({ days, hours, minutes, seconds }) {
 
 function addLeadingZero(value) {
   return String(value).padStart(2, '0');
-};
+}
 
 function convertMs(ms) {
   const second = 1000;
@@ -90,4 +94,4 @@ function convertMs(ms) {
   const seconds = addLeadingZero(Math.floor((((ms % day) % hour) % minute) / second));
 
   return { days, hours, minutes, seconds };
-};
+}
