@@ -14,10 +14,12 @@ const sseconds = document.querySelector('[data-seconds]');
 let appointedTime;
 let subtractTime;
 
+const currentDate = moment().format('YYYY-MM-DD HH:mm');
+
 const options = {
   enableTime: true,
   time_24hr: true,
-  defaultDate: '',
+  defaultDate: `${currentDate}`,
   minuteIncrement: 1,
   onClose() {
     if (subtractTime < 0) {
